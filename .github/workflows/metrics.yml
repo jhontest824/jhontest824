@@ -1,0 +1,45 @@
+name: Métricas Automáticas
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-metrics:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install required dependencies
+        run: |
+          pip install --upgrade pip
+          pip install github-actions-utils matplotlib
+
+      - name: Generate general metrics
+        run: |
+          python -m github_actions_utils.metrics general > general.svg
+        continue-on-error: true
+
+      - name: Generate average metrics
+        run: |
+          python -m github_actions_utils.metrics averages > medias.svg
+        continue-on-error: true
+
+      - name: Upload metrics as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: general-metrics
+          path: general.svg
+      - name: Upload average metrics as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: average-metrics
+          path: medias.svg
