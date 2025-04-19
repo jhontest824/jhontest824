@@ -33,6 +33,12 @@ jobs:
           python -m github_actions_utils.metrics averages > medias.svg
         continue-on-error: true
 
+      - name: Verificar archivos generados
+        run: |
+          ls -l
+          echo "Archivos generados:"
+          ls *.svg
+
       - name: Upload metrics as artifacts
         uses: actions/upload-artifact@v2
         with:
